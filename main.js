@@ -34,7 +34,7 @@ bot.help((ctx) => {
 // IF EXPRESS IS NEEDED
 const app = express();
 app.use(express.json());
-app.use(bot.webhookCallback("/"));
+// app.use(bot.webhookCallback("/"));
 app.get("/", (req, res) => {
   res.sendStatus(200);
 });
