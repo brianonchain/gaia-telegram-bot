@@ -20,7 +20,7 @@ bot.command("ETH", (ctx) => {
   });
 });
 
-const helpItems = ["/start - welcome message", "/ETH - get ETH price", "/quit - to stop the bot", "/trade - trade coins"];
+const helpItems = ["/start - welcome message", "/ETH - get ETH price", "/quit - to stop the bot", "/trade - trade coins", "/more - more"];
 let helpString = "";
 for (const item of helpItems) {
   helpString = helpString + "\n" + item;
