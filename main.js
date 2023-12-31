@@ -31,13 +31,13 @@ bot.help((ctx) => {
 
 // bot.launch();
 
-// // IF EXPRESS IS NEEDED
-// const app = express();
-// app.use(express.json());
+// IF EXPRESS IS NEEDED
+const app = express();
+app.use(express.json());
 // app.use(bot.webhookCallback("/"));
-// app.get("/", (req, res) => {
-//   res.sendStatus(200);
-// });
-// app.listen(process.env.PORT, () => {
-//   console.log(`listening on port ${process.env.PORT}`);
-// });
+app.get("/", (req, res) => {
+  res.sendStatus(200);
+});
+app.listen(process.env.PORT, () => {
+  console.log(`listening on port ${process.env.PORT}`);
+});
