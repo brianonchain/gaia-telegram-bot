@@ -26,7 +26,7 @@ const commands = [
     description: "welcome message",
   },
   {
-    command: "ETH",
+    command: "eth",
     description: "get ETH price",
   },
   {
