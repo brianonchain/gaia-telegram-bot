@@ -28,12 +28,12 @@ const app = express();
 
 // app.use(express.static("static"));
 app.use(express.json());
-// app.use(webhookCallback(bot, "express"));
+app.use(bot.webhookCallback("/"));
 
 bot.telegram.setWebhook(process.env.URL);
 
 app.post("/", (req, res) => {
-  bot.processUpdate(req.body);
+  // bot.processUpdate(req.body);
   res.sendStatus(200);
 });
 
