@@ -20,18 +20,40 @@ bot.command("ETH", (ctx) => {
   });
 });
 
-const helpItems = ["/start - welcome message", "/ETH - get ETH price", "/quit - to stop the bot", "/trade - trade coins", "/more - more"];
-let helpString = "";
-for (const item of helpItems) {
-  helpString = helpString + "\n" + item;
+const commands = [
+  {
+    command: "start",
+    description: "welcome message",
+  },
+  {
+    command: "ETH",
+    description: "get ETH price",
+  },
+  {
+    command: "quit",
+    description: "to stop the bot",
+  },
+  {
+    command: "trade",
+    description: "trade coins",
+  },
+  {
+    command: "more",
+    description: "moretest",
+  },
+];
+bot.telegram.setMyCommands(commands);
+
+let helpReply = "";
+for (const command of commands) {
+  helpReply = helpReply + "\n" + "/" + command.command + " - " + command.description;
 }
 bot.help((ctx) => {
-  ctx.reply(helpString);
+  ctx.reply(helpReply);
 });
 
 // bot.launch();
 
-// IF EXPRESS IS NEEDED
 const app = express();
 app.use(express.json());
 app.use(bot.webhookCallback("/"));
