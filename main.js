@@ -5,6 +5,9 @@ const { Telegraf } = require("telegraf");
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
+bot.telegram.setWebhook(process.env.URL);
+bot.startWebhook("/", null, 5000);
+
 bot.command("start", (ctx) => {
   console.log(ctx);
   // console.log("from:", ctx.from);
@@ -26,15 +29,11 @@ bot.command("ethereum", (ctx) => {
 
 const app = express();
 
-// app.use(express.static("static"));
 app.use(express.json());
 app.use(bot.webhookCallback("/"));
 
-bot.telegram.setWebhook(process.env.URL);
-
 app.post("/", (req, res) => {
-  // bot.processUpdate(req.body);
-  res.sendStatus(200);
+  res.send("Hello World!");
 });
 
 app.listen(process.env.PORT, () => {
