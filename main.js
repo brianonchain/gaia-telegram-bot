@@ -6,7 +6,7 @@ const { Telegraf } = require("telegraf");
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 bot.telegram.setWebhook(process.env.URL);
-bot.startWebhook("/", null, process.env.PORT);
+bot.startWebhook("/", null, 5000);
 
 bot.command("start", (ctx) => {
   bot.telegram.sendMessage(ctx.chat.id, "Hello there! Welcome to the Code Capsules telegram bot.\nI respond to /ethereum. Please try it", {});
