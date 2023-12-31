@@ -9,10 +9,20 @@ bot.telegram.setWebhook(process.env.URL);
 bot.startWebhook("/", null, 5000); // can't be same port as listening
 
 bot.command("start", (ctx) => {
-  bot.telegram.sendMessage(ctx.chat.id, "Hello there! Welcome to the Code Capsules telegram bot.\nI respond to /ethereum. Please try it", {});
+  bot.telegram.sendMessage(ctx.chat.id, "Welcome to Gaia Trading Bot");
 });
 
-bot.command("ETH", (ctx) => {
+bot.command("trade", (ctx) => {
+  ctx.replyWithHTML(
+    "<b>Choose an exchange:</b>",
+    Markup.keyboard([
+      ["Binance", "OKX", "Coinbase"],
+      ["Matcha Aggregator", "Jupiter Aggregator (Solana)"],
+    ]).resize()
+  );
+});
+
+bot.command("eth", (ctx) => {
   axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd`).then((response) => {
     console.log(response.data);
     const rate = response.data.ethereum;
@@ -22,21 +32,22 @@ bot.command("ETH", (ctx) => {
 
 const commands = [
   {
-    command: "start",
-    description: "welcome message",
+    command: "trade",
+    description: "trade any token",
   },
   {
-    command: "eth",
-    description: "get ETH price",
+    command: "exchanges",
+    description: "see list of integrated exchanges",
+  },
+  {
+    command: "fees",
+    description: "description of all system fees",
   },
   {
     command: "quit",
     description: "to stop the bot",
   },
-  {
-    command: "trade",
-    description: "trade coins",
-  },
+
   {
     command: "more",
     description: "moretest",
