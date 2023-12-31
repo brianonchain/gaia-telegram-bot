@@ -33,9 +33,9 @@ const app = express();
 app.use(express.json());
 app.use(bot.webhookCallback("/"));
 
-// app.get("/", (req, res) => {
-//   res.sendStatus(200);
-// });
+app.get("/", (req, res) => {
+  res.sendStatus(200);
+});
 
 app.listen(process.env.PORT, () => {
   console.log(`listening on port ${process.env.PORT}`);
