@@ -1,0 +1,38 @@
+Context {
+  update: {
+    update_id: 754721640,
+    message: {
+      message_id: 19,
+      from: [Object],
+      chat: [Object],
+      date: 1704016106,
+      text: '/start',
+      entities: [Array]
+    }
+  },
+  telegram: Telegram {
+    token: '6769016970:AAEj3Fgo1UrVGbvf5I61ovxK4uOuBwFy1LE',
+    response: undefined,
+    options: {
+      apiRoot: 'https://api.telegram.org',
+      apiMode: 'bot',
+      webhookReply: true,
+      agent: [Agent],
+      attachmentAgent: undefined,
+      testEnv: false
+    }
+  },
+  botInfo: {
+    id: 6769016970,
+    is_bot: true,
+    first_name: 'Gaia',
+    username: 'GaiaTradingBot',
+    can_join_groups: true,
+    can_read_all_group_messages: false,
+    supports_inline_queries: false
+  },
+  state: {},
+  command: 'start',
+  payload: '',
+  args: [Getter/Setter]
+}

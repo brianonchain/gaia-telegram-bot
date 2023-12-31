@@ -25,12 +25,18 @@ bot.command("ethereum", (ctx) => {
 // bot.launch();
 
 const app = express();
-const port = process.env.PORT || 8080;
-app.use(express.static("static"));
-app.use(express.json());
-app.use(bot.webhookCallback("/"));
-bot.telegram.setWebhook("");
 
-// app.get("/", (req, res) => {
-//   res.sendFile(path.join(__dirname + "/index.html"));
-// });
+// app.use(express.static("static"));
+app.use(express.json());
+// app.use(webhookCallback(bot, "express"));
+
+bot.telegram.setWebhook(process.env.URL);
+
+app.post("/", (req, res) => {
+  bot.processUpdate(req.body);
+  res.sendStatus(200);
+});
+
+app.listen(process.env.PORT, () => {
+  console.log(`listening on port ${process.env.PORT}`);
+});
