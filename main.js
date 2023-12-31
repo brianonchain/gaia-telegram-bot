@@ -12,13 +12,15 @@ bot.command("start", (ctx) => {
   bot.telegram.sendMessage(ctx.chat.id, "Welcome to Gaia Trading Bot");
 });
 
-bot.command("trade", (ctx) => {
-  ctx.replyWithHTML(
+bot.command("trade", async (ctx) => {
+  return await ctx.replyWithHTML(
     "<b>Choose an exchange:</b>",
     Markup.keyboard([
       ["Binance", "OKX", "Coinbase"],
       ["Matcha Aggregator", "Jupiter Aggregator (Solana)"],
-    ]).resize()
+    ])
+      .oneTime()
+      .resize()
   );
 });
 
