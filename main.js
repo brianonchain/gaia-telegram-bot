@@ -6,21 +6,24 @@ const { Telegraf } = require("telegraf");
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 bot.telegram.setWebhook(process.env.URL);
-bot.startWebhook("/", null, 5000);
+bot.startWebhook("/", null, process.env.PORT);
 
 bot.command("start", (ctx) => {
   bot.telegram.sendMessage(ctx.chat.id, "Hello there! Welcome to the Code Capsules telegram bot.\nI respond to /ethereum. Please try it", {});
 });
 
-bot.command("ethereum", (ctx) => {
-  var rate;
-  console.log(ctx.from);
+bot.command("ETH", (ctx) => {
   axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd`).then((response) => {
     console.log(response.data);
-    rate = response.data.ethereum;
-    const message = `Hello, today the ethereum price is ${rate.usd}USD`;
-    bot.telegram.sendMessage(ctx.chat.id, message, {});
+    const rate = response.data.ethereum;
+    bot.telegram.sendMessage(ctx.chat.id, `Hello, today the ethereum price is ${rate.usd}USD`);
   });
+});
+
+bot.help((ctx) => {
+  ctx.reply("/start - welcome message");
+  ctx.reply("/ETH - get ETH price");
+  ctx.reply("/quit - to stop the bot");
 });
 
 // bot.launch();
