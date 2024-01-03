@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "trading-view-adapter",
+  "private_key_id": "7a97d9db7147bf279e61c6dd4bd3ff5f922e2827",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDOs0+e3pgC2UJe\nQoX9Z/Wv2apGkTh/15Eh7mMKzPF5j3faEgKzW4pY4zXe5hCxnYJVLoYHzH7tTQoH\n4BE0cGPqv6xL1D88x1XYYMjhdQcyE2ETZ1v6T7Tb4JnyX+Kp3cfqnYCRXqidj82s\ncCvn/23KAZ7nCfBz/9+6BuT5jTiyA1WdRjZUqnvhYnrrHGSs5Fbo7V/NUlF1Tobc\n1Q7z+mFKdko9FY1PYrXZ8lFz0BSUspUqqX274FIDo9WHfcs1cOhLz0H+gkw0Mh7B\njhAIfA+lYHCkuwf/gRZDQ9GGggsn2Wjv7FuLlFLWKnZLw3Ykkcjh93xaMwKVvjVn\nyiTZMeIBAgMBAAECggEATpPYBts0CpExK8g6S7VDrxAeLSlzwxXd9Ho9aJO0kLO7\nqkkCgdCg7V2i0xO+8Oah72P6S+ivr+KDl67Um4zGTy2CgGk1iRN2TQWuGBd3HtBD\nLS8zxhqa9KOTopJVBqJrJ4OsppbHnu5WD+Gsr0tpH0wybj5XDKIPGRcZ4MyQ6wqt\nwYnNlY/wl8tsQYmu+8nzz9kQveD5VSdKAeXN/a3qYt+FPC9qRcLbkUfTQa0xLKE+\naLdekaHCvzX1i73ZYo6vvsXdHhOtFvu+PZCRSO0qfytm2sNlgURXzG1gEkMIm5Co\nYaJhv3rpI0KAXVh/gCfb74NT4GFmwUeCFU/XYlcW6QKBgQD9TKDBj+cWPxsdRkYl\nQRH+HSeANHQ7z6f/kII4OXTsDJjA/+6zJjPmjddW5oj0XNJxYWCHahMRLJ9SvKbC\nfMluh47BgYz+Sx1VzZRd5x1fgvEH/TBoMrvLBoLGgKzf7Hiv0q42rT4GhVyF6H4F\n8cnG6GdWNOkHL8QsObk9IUxBIwKBgQDQ534xWSorYBr5zHrVOHn2YXnJ6A1hOzEH\nPAyjhYWkav7jhWa9VjKjmucqNsvAVJ8l13zhbgO1bz/6EleRLHoog8SVFJ07jUsR\nPKemEoHQqa4rngDewqlK+5in49Sa5fTFVsGc99qzK4y8SxhCV9H5TxUD+Qz/Fyl+\ndE8gIM2siwKBgQCttDH964BuyiH/BmUuQRxkpnujONWI+tPbt68FfamIAu9yU1DP\nfGBVOGo3RuseoNUUOdInqv+eZHpyE7tMXqUIbl/gpcYZ0Usxv0SCzO5gxHwknWXn\n3vrXtQRTuoRTH2h4MsOT7WQ+tpAHqLNbwj88b74F6Uzwx7oBFijJGh+f/wKBgAv0\nEw5z0avlteVxQ94Lez8T2Moq0wkrP+TwFLEOpNUBolAWhAh1dDRUWsHZnNMGhIy/\nxc+IYgHxubFvdz9BUkQbNhZptY2AyjjURauFB5SPAP5R7i7Q6Kr3toZ0zOeIHPdl\nvXJj5Em4RjdH/L1fFQ607bjqeUnnY2Ju+VAXUG19AoGASaPS0x3ACqFBIAKUr2Cf\nZYnDf6yNOex4bYxDhajaI3FoQc3a1o0ura8jo2ApLGkDeRZUWFxkkJRW9+UUJQee\ndwcfqVai/5v7B7gKlpMJv+jsD9yL2yzXtbU+mR+hY3B5tlINnqo2sbi7rq2mY69z\nGGndxwGmX5sigQcHNyTDDTQ=\n-----END PRIVATE KEY-----\n",
+  "client_email": "trading-view-adapter@appspot.gserviceaccount.com",
+  "client_id": "104973965495484643130",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/trading-view-adapter%40appspot.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

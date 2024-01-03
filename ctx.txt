@@ -36,3 +36,65 @@ Context {
   payload: '',
   args: [Getter/Setter]
 }
+
+
+// ctx.update.message.from
+{
+  id: 1500081477,
+  is_bot: false,
+  first_name: 'Brian',
+  username: 'kryptomatic',
+  language_code: 'en'
+}
+
+// // OTHER BOT FUNCTIONS
+// bot.command("eth", (ctx) => {
+//   axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd`).then((response) => {
+//     console.log(response.data);
+//     const rate = response.data.ethereum;
+//     bot.telegram.sendMessage(ctx.chat.id, `Hello, today the ethereum price is ${rate.usd}USD`);
+//   });
+// });
+
+// bot.on("callback_query", async (ctx) => {
+//   const query = ctx.callbackQuery.data;
+//   if (["binance", "coinbase", "okx", "bybit"].includes(query)) {
+//     const CEXOrderTypeKb = await getCEXOrderTypeKb();
+//     ctx.session = { exchange: "binance" };
+//     ctx.telegram.sendMessage(ctx.chat.id, `Execution message:\n${ctx.session.exchange}`, {
+//       reply_markup: {
+//         inline_keyboard: CEXOrderTypeKb,
+//       },
+//     });
+//   } else if (ctx.session.exchange && ["market_buy", "market_sell", "limit_buy", "limit_sell"].includes(query)) {
+//     ctx.session.orderType = query.split("_")[0];
+//     ctx.session.side = query.split("_")[1];
+
+//     await ctx.telegram.sendMessage(ctx.chat.id, `Execution message:\n${ctx.session.exchange} ${ctx.session.orderType} ${ctx.session.side}`);
+//     await ctx.telegram.sendMessage(ctx.chat.id, `What token do you want to ${ctx.session.side}?`);
+//   }
+// });
+
+// bot.on("message", async (ctx) => {
+//   const text = ctx.message.text;
+
+//   if (text.split(" ").length == 7 ){
+
+//   } else if (ctx.session.exchange && ctx.session.orderType && ctx.session.side) {
+//     // expect amount and name of base token?
+//   } else if (ctx.session.exchange && ctx.session.orderType && ctx.session.side && ctx.session.amountBaseToken && ctx.session.baseToken) {
+//     // expect name of quote token?
+//    } else {
+//     // reply invalid emssage
+//    }
+
+//    if ([CEXList].includes.ctx.session.exchange
+
+//     && ctx.session.orderType && ctx.session.side && ctx.session.amountBaseToken && ctx.session.baseToken && ctx.session.quoteToken) {
+//     if (){}
+//   } else {
+//     ctx.reply('Incomplete execution message. Please start over by sending "/start"');
+//   };
+//   console.log(ctx.message.text);
+//   ctx.telegram.sendMessage(ctx.chat.id, "hey");
+// });
