@@ -195,8 +195,8 @@ const stage = new Scenes.Stage([WizCEXMarket]);
 bot.use(session());
 bot.use(stage.middleware());
 
-// bot.telegram.setWebhook(process.env.URL);
-// bot.startWebhook("/", null, 5000); // can't be same port as listening
+bot.telegram.setWebhook(process.env.URL);
+bot.startWebhook("/", null, 5000); // can't be same port as listening
 
 bot.command("start", async (ctx) => {
   if (!ctx.session.settings) {
@@ -352,11 +352,14 @@ bot.telegram.setMyCommands(commands);
 // bot.launch();
 
 const app = express();
+
 app.use(express.json());
 app.use(bot.webhookCallback("/"));
+
 app.get("/", (req, res) => {
   res.sendStatus(200);
 });
+
 app.listen(process.env.PORT, () => {
   console.log(`listening on port ${process.env.PORT}`);
 });
