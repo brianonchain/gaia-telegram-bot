@@ -138,7 +138,6 @@ const WizCEXMarket = new Scenes.WizardScene(
         },
       }
     );
-    console.log(ctx.session);
     return ctx.wizard.next();
   },
 
@@ -199,9 +198,6 @@ bot.telegram.setWebhook(process.env.URL);
 bot.startWebhook("/", null, 5000); // can't be same port as listening
 
 bot.command("start", async (ctx) => {
-  console.log(ctx.update.message.chat);
-  console.log(ctx.session.settings);
-
   if (!ctx.session.settings) {
     ctx.session = { trade: {}, settings: { binance: {}, coinbase: {}, okx: {}, bybit: {} }, wallet: { address: {}, privateKey: {} } };
   }
@@ -212,7 +208,6 @@ bot.command("start", async (ctx) => {
       inline_keyboard: keyboard,
     },
   });
-  console.log(ctx.session);
 });
 
 bot.action("balance", async (ctx) => {
@@ -330,6 +325,7 @@ bot.command("balance", async (ctx) => {
 
 bot.command("id", async (ctx) => {
   const id = ctx.update.message.from.id.toString();
+  console.log("id", id);
   ctx.reply(id);
 });
 
