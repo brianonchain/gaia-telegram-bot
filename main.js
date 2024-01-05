@@ -329,7 +329,7 @@ bot.command("balance", async (ctx) => {
 });
 
 bot.command("id", async (ctx) => {
-  ctx.reply(ctx.update.message.from.id);
+  ctx.reply(ctx.update.message.from.id.toString());
 });
 
 bot.help((ctx) => {
