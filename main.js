@@ -210,6 +210,24 @@ bot.command("start", async (ctx) => {
   });
 });
 
+bot.command("balance", async (ctx) => {
+  let balanceString = await getBalances();
+  let keyboard = await getBalanceKeyboard();
+  ctx.telegram.sendMessage(ctx.chat.id, balanceString, {
+    parse_mode: "HTML",
+    reply_markup: {
+      inline_keyboard: keyboard,
+    },
+  });
+});
+
+bot.command("myid", async (ctx) => {
+  console.log("tiggered");
+  const id = ctx.update.message.from.id.toString();
+  console.log("id", id);
+  ctx.reply(id);
+});
+
 bot.action("balance", async (ctx) => {
   let balanceString = await getBalanceString();
   ctx.telegram.sendMessage(ctx.chat.id, balanceString, {
@@ -310,24 +328,6 @@ bot.on("message", async (ctx) => {
     ctx.session.settings.binance.password = text.split("=")[1];
     ctx.reply("Binance password set");
   }
-});
-
-bot.command("balance", async (ctx) => {
-  let balanceString = await getBalances();
-  let keyboard = await getBalanceKeyboard();
-  ctx.telegram.sendMessage(ctx.chat.id, balanceString, {
-    parse_mode: "HTML",
-    reply_markup: {
-      inline_keyboard: keyboard,
-    },
-  });
-});
-
-bot.command("myid", async (ctx) => {
-  console.log("tiggered");
-  const id = ctx.update.message.from.id.toString();
-  console.log("id", id);
-  ctx.reply(id);
 });
 
 bot.help((ctx) => {
