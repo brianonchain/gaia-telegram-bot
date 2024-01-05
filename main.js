@@ -323,7 +323,7 @@ bot.command("balance", async (ctx) => {
   });
 });
 
-bot.command("id", async (ctx) => {
+bot.command("myid", async (ctx) => {
   console.log("tiggered");
   const id = ctx.update.message.from.id.toString();
   console.log("id", id);
