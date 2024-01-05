@@ -199,6 +199,9 @@ bot.telegram.setWebhook(process.env.URL);
 bot.startWebhook("/", null, 5000); // can't be same port as listening
 
 bot.command("start", async (ctx) => {
+  console.log(ctx.update.message.chat);
+  console.log(ctx.session.settings);
+
   if (!ctx.session.settings) {
     ctx.session = { trade: {}, settings: { binance: {}, coinbase: {}, okx: {}, bybit: {} }, wallet: { address: {}, privateKey: {} } };
   }
@@ -323,6 +326,12 @@ bot.command("balance", async (ctx) => {
       inline_keyboard: keyboard,
     },
   });
+});
+
+bot.command("id", async (ctx) => {
+  let balanceString = await getBalances();
+  let keyboard = await getBalanceKeyboard();
+  ctx.reply(ctx.update.message.from.id);
 });
 
 bot.help((ctx) => {

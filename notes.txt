@@ -1,3 +1,5 @@
+use git push heroku master
+
 Context {
   update: {
     update_id: 754721640,
@@ -45,6 +47,13 @@ Context {
   first_name: 'Brian',
   username: 'kryptomatic',
   language_code: 'en'
+}
+// ctx.update.message.chat
+{
+  id: 1500081477,
+  first_name: 'Brian',
+  username: 'kryptomatic',
+  type: 'private'
 }
 
 // // OTHER BOT FUNCTIONS
