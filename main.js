@@ -329,8 +329,6 @@ bot.command("balance", async (ctx) => {
 });
 
 bot.command("id", async (ctx) => {
-  let balanceString = await getBalances();
-  let keyboard = await getBalanceKeyboard();
   ctx.reply(ctx.update.message.from.id);
 });
 
