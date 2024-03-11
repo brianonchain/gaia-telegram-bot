@@ -374,17 +374,3 @@ if (process.env.PORT == "8080") {
   console.log("activate bot.launch()");
   bot.launch();
 }
-
-/******************************* SETUP EXPRESSE APP *****************************************/
-// const app = express();
-
-// app.use(express.json());
-// app.use(bot.webhookCallback("/")); // use entire bot instance as a middleware ca
-
-// app.get("/", (req, res) => {
-//   res.sendStatus(200);
-// });
-
-// app.listen(process.env.PORT, () => {
-//   console.log(`listening on port ${process.env.PORT}`);
-// });
