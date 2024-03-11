@@ -204,7 +204,7 @@ bot.use(stage.middleware()); // integrate "stage" (thus our Wizard Scenes) as a 
 if (process.env.PORT != "8080") {
   console.log("start listening to webhooks");
   bot.telegram.setWebhook(process.env.URL); // set webhook URL to Heroku App URL
-  bot.startWebhook("/", null, 5000); // start listening for webhooks, can't listen to same port as nodejs app
+  bot.startWebhook("/", null, process.env.PORT || 5000); // start listening for webhooks, can't listen to same port as nodejs app
 }
 /**************************************************************************************************/
 
