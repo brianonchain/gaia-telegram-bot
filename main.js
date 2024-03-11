@@ -196,6 +196,7 @@ const stage = new Scenes.Stage([BinanceSpotWizardScene]); // append all "scenes"
 /**************************************************************************************************/
 
 /*************************** DEFINE INDIVIDUAL BOT COMMANDS ***************************************/
+console.log(process.env.PORT);
 bot.use(session()); // use session middleware, so we can store local data in Telegram bot
 bot.use(stage.middleware()); // integrate "stage" (thus our Wizard Scenes) as a middleware
 
@@ -369,6 +370,7 @@ bot.telegram.setMyCommands(commands);
 // Telegram listens to incoming messsages through "polling" (using bot.launch()) or webhooks. When starting the bot in localhost, use bot.launch().
 // If using Heroku, use webhooks. Heroku will set port to number other than 8080. So, if PORT=8080, then use bot.launch().
 if (process.env.PORT == "8080") {
+  console.log("activate bot.launch()");
   bot.launch();
 }
 
