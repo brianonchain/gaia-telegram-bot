@@ -1,14 +1,19 @@
 const express = require("express");
-const axios = require("axios");
 require("dotenv").config();
 const { Telegraf, session, Scenes } = require("telegraf");
 // import helper functions
 const { getStartKb, getBalanceString, getCEXOrderTypeKb, checkBaseToken, checkQuoteToken, staticKbs, staticStrings } = require("./utils");
 const marketOrder = require("./trade/marketOrder.js");
 
+// Creates a new Telegraf instance. Telegraf is a wrapper for the Telegram APIs. Another popular library is node-telegram-bot-api
+// Why I chose Telegraf: https://dev.to/maklut/telegraf-vs-node-telegram-bot-api-36fk
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-const WizCEXMarket = new Scenes.WizardScene(
+// a Wizard Scene allows you to construct a step-by-step path when users clicks a menu button. For example, if user clicks Button A,
+// they will see Button Y and Button Z. If they click Button B, they will see Button W and Button X.
+
+// Here, we create a Wizard Scene called "WizCEXMarket". This Wizard launches when user clicks "Binance Spot" in the /start menu
+const BinanceSpotWizardScene = new Scenes.WizardScene(
   "CEXmarket",
   async (ctx) => {
     const orderType = ctx.callbackQuery.data.split("_")[0];
@@ -187,17 +192,23 @@ const WizCEXMarket = new Scenes.WizardScene(
     }
   }
 );
+const stage = new Scenes.Stage([BinanceSpotWizardScene]); // append all "scenes" to "stage"
+/**************************************************************************************************/
 
-const stage = new Scenes.Stage([WizCEXMarket]);
+/*************************** DEFINE INDIVIDUAL BOT COMMANDS ***************************************/
+bot.use(session()); // use session middleware, so we can store local data in Telegram bot
+bot.use(stage.middleware()); // integrate "stage" (thus our Wizard Scenes) as a middleware
 
-// define middleware
-bot.use(session());
-bot.use(stage.middleware());
+// if not in development mode, then activate Telegram to start listening to webhooks
+if (process.env.PORT != "8080") {
+  bot.telegram.setWebhook(process.env.URL); // set webhook URL to Heroku App URL
+  bot.startWebhook("/", null, 5000); // start listening for webhooks, can't listen to same port as nodejs app
+}
+/**************************************************************************************************/
 
-bot.telegram.setWebhook(process.env.URL);
-bot.startWebhook("/", null, 5000); // can't be same port as listening
-
+/*************************** DEFINE INDIVIDUAL BOT COMMANDS ***************************************/
 bot.command("start", async (ctx) => {
+  // if there is already an order in session.settings, make everything blank
   if (!ctx.session.settings) {
     ctx.session = { trade: {}, settings: { binance: {}, coinbase: {}, okx: {}, bybit: {} }, wallet: { address: {}, privateKey: {} } };
   }
@@ -353,18 +364,24 @@ const commands = [
   },
 ];
 bot.telegram.setMyCommands(commands);
+/******************************************** END **********************************************/
 
-// bot.launch();
+// Telegram listens to incoming messsages through "polling" (using bot.launch()) or webhooks. When starting the bot in localhost, use bot.launch().
+// If using Heroku, use webhooks. Heroku will set port to number other than 8080. So, if PORT=8080, then use bot.launch().
+if (process.env.PORT == "8080") {
+  bot.launch();
+}
 
-const app = express();
+/******************************* SETUP EXPRESSE APP *****************************************/
+// const app = express();
 
-app.use(express.json());
-app.use(bot.webhookCallback("/"));
+// app.use(express.json());
+// app.use(bot.webhookCallback("/")); // use entire bot instance as a middleware ca
 
-app.get("/", (req, res) => {
-  res.sendStatus(200);
-});
+// app.get("/", (req, res) => {
+//   res.sendStatus(200);
+// });
 
-app.listen(process.env.PORT, () => {
-  console.log(`listening on port ${process.env.PORT}`);
-});
+// app.listen(process.env.PORT, () => {
+//   console.log(`listening on port ${process.env.PORT}`);
+// });

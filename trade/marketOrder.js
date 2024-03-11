@@ -1,14 +1,13 @@
 const ccxt = require("ccxt");
 const { google } = require("googleapis");
+require("dotenv").config();
 
 const marketOrder = async (ctx) => {
   console.log(ctx.session);
   const binance = new ccxt.binance({
     enableRateLimit: true,
-    apiKey: "L2jg1eO7L9EpWw7gk2IHzhWaRIad0BV9BL46Ux24wO2bhros2gwqIqy0yJ3S5hci",
-    secret: "GXi19o9kI0347O2p9nutytsPdnUu74gAqS8DVQRJm0XaFihdvsJ8fShGsGMqpY6D",
-    // apiKey: ctx.session.settings[ctx.session.trade.exchange.toLowerCase()].api,
-    // secret: ctx.session.settings[ctx.session.trade.exchange.toLowerCase()].secret,
+    apiKey: process.env.BINANCE_TESTNET_API_KEY,
+    secret: process.env.BINANCE_TESTNET_SECRET_KEY,
   });
   binance.setSandboxMode(true);
 
@@ -34,7 +33,7 @@ const marketOrder = async (ctx) => {
     const googleSheetsInstance = google.sheets({ version: "v4", auth: authClientObject });
     await googleSheetsInstance.spreadsheets.batchUpdate({
       auth,
-      spreadsheetId: "1XY-sjWPj03bw5mIbJrupfJJ9tMBGIiHkCIrT9DVMI9U",
+      spreadsheetId: process.env.GOOGLE_SHEET_ID,
       resource: {
         requests: [
           {

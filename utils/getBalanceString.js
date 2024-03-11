@@ -25,14 +25,8 @@ const getBalanceString = async () => {
 
   const binanceBalanceString = await getBinanceBalanceString();
 
-  // get coinbase balance
-  // get okx balance
-  // get bybit balance
-  // get wallet balance
-
   const balance = binanceBalanceString;
 
   return balance;
 };
-// getBalances();
 module.exports = getBalanceString;

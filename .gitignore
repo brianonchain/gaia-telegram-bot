@@ -2,3 +2,4 @@
 node_modules/
 ctx.txt
 .vscode/
+test.js
