@@ -1,24 +1,26 @@
-const express = require("express");
-require("dotenv").config();
 const { Telegraf, session, Scenes } = require("telegraf");
+require("dotenv").config();
 // import helper functions
-const { getStartKb, getBalanceString, getCEXOrderTypeKb, checkBaseToken, checkQuoteToken, staticKbs, staticStrings } = require("./utils");
+const { getStartKb, getBalanceString, getCEXOrderTypeKb, staticKbs, staticStrings } = require("./utils");
 const marketOrder = require("./trade/marketOrder.js");
 
 // Creates a new Telegraf instance. Telegraf is a wrapper for the Telegram APIs. Another popular library is node-telegram-bot-api
-// Why I chose Telegraf: https://dev.to/maklut/telegraf-vs-node-telegram-bot-api-36fk
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
+/************************************** WIZARD, SCENE, STAGE **************************************/
 // a Wizard Scene allows you to construct a step-by-step path when users clicks a menu button. For example, if user clicks Button A,
 // they will see Button Y and Button Z. If they click Button B, they will see Button W and Button X.
-
 // Here, we create a Wizard Scene called "WizCEXMarket". This Wizard launches when user clicks "Binance Spot" in the /start menu
-const BinanceSpotWizardScene = new Scenes.WizardScene(
+const CEXmarketWizardScene = new Scenes.WizardScene(
   "CEXmarket",
   async (ctx) => {
+    console.log("entering CEXmarket Wizard Scene");
+    // extract variable
     const orderType = ctx.callbackQuery.data.split("_")[0];
+    const side = ctx.callbackQuery.data.split("_")[1];
+    // write to local session storage
     ctx.session.trade.orderType = orderType;
-    ctx.session.trade.side = ctx.callbackQuery.data.split("_")[1];
+    ctx.session.trade.side = side;
 
     await ctx.reply(
       `My order (incomplete)\n${ctx.session.trade.exchange} ${ctx.session.trade.market} ${ctx.session.trade.orderType} ${ctx.session.trade.side}\n\nEnter amount of token to ${ctx.session.trade.side} (example: 1000 DOGE)`,
@@ -58,25 +60,30 @@ const BinanceSpotWizardScene = new Scenes.WizardScene(
       return;
     }
 
-    // validate base token
+    ////// User now enters amount of token to buy/sell
     const text = ctx.message.text;
-    const isTwoWords = text.split(" ").length == 2;
-    const isFirstWordNumber = Number.isNaN(Number(text.split("_")[0]));
-    const isBaseTokenAvailable = await checkBaseToken(ctx.session.trade.exchange);
+    //// performing checks first
+    // check errors in text message
+    const isTwoWords = text.split(" ").length == 2; // check if message is exactly 2 words
+    const isFirstWordNumber = Number.isNaN(Number(text.split("_")[0])); // check if first word is a number
+    // const isBaseTokenAvailable = await checkBaseToken(ctx.session.trade.exchange); // check if tokesn are available on exchange
+    // throw error if checks do not pass
     if (!isTwoWords || !isFirstWordNumber) {
       ctx.reply("Please enter valid token amount and token name");
       return;
     }
-    if (!isBaseTokenAvailable) {
-      ctx.reply(`${text.split("_")[0]} is not an available token on ${ctx.session.trade.exchange.toUpperCase()} EXCHANGE`);
-      return;
-    }
+    // if (!isBaseTokenAvailable) {
+    //   ctx.reply(`${text.split("_")[0]} is not an available token on ${ctx.session.trade.exchange.toUpperCase()} EXCHANGE`);
+    //   return;
+    // }
 
-    // validate success and proceed
+    // extract variables
     const baseTokenAmount = text.split(" ")[0];
     const baseToken = text.split(" ")[1];
+    // write to local session storage
     ctx.session.trade.baseTokenAmount = baseTokenAmount;
     ctx.session.trade.baseToken = baseToken;
+    // reply
     await ctx.reply(
       `My order (incomplete)\n${ctx.session.trade.exchange} ${ctx.session.trade.market} ${ctx.session.trade.orderType} ${ctx.session.trade.side} ${ctx.session.trade.baseTokenAmount} ${ctx.session.trade.baseToken}\n\nNow, enter your quote token or currency (e.g., USDT, USDC, USD, EUR, etc.)`,
       {
@@ -120,18 +127,19 @@ const BinanceSpotWizardScene = new Scenes.WizardScene(
       return;
     }
 
-    // validate quote token
+    ////// user now enters quote token
     const text = ctx.message.text;
+    // checks
     const isOneWord = text.split(" ").length == 1;
-    const isQuoteTokenAvailable = await checkQuoteToken(ctx.session.trade.exchange);
+    // const isQuoteTokenAvailable = await checkQuoteToken(ctx.session.trade.exchange);
     if (!isOneWord) {
       ctx.reply("Please enter a valid quote token or currency name");
       return;
     }
-    if (!isQuoteTokenAvailable) {
-      ctx.reply(`${text} is not an available quote token or currency on ${ctx.session.trade.exchange.toUpperCase()} EXCHANGE`);
-      return;
-    }
+    // if (!isQuoteTokenAvailable) {
+    //   ctx.reply(`${text} is not an available quote token or currency on ${ctx.session.trade.exchange.toUpperCase()} EXCHANGE`);
+    //   return;
+    // }
 
     // validation=success and proceed
     ctx.session.trade.quoteToken = text;
@@ -192,10 +200,10 @@ const BinanceSpotWizardScene = new Scenes.WizardScene(
     }
   }
 );
-const stage = new Scenes.Stage([BinanceSpotWizardScene]); // append all "scenes" to "stage"
-/**************************************************************************************************/
+const stage = new Scenes.Stage([CEXmarketWizardScene]); // append all "scenes" to "stage"
+/******************** WIZARD, SCENE, STAGE (END) **************************************/
 
-/*************************** DEFINE INDIVIDUAL BOT COMMANDS ***************************************/
+/****************************** BOT SETUP *********************************************/
 console.log("listening on port:", process.env.PORT);
 bot.use(session()); // use session middleware, so we can store local data in Telegram bot
 bot.use(stage.middleware()); // integrate "stage" (thus our Wizard Scenes) as a middleware
@@ -206,11 +214,11 @@ if (process.env.PORT != "8080") {
   bot.telegram.setWebhook(process.env.URL); // set webhook URL to Heroku App URL
   bot.startWebhook("/", null, process.env.PORT || 5000); // start listening for webhooks, can't listen to same port as nodejs app
 }
-/**************************************************************************************************/
+/***************************** BOT SETUP (END) ****************************************/
 
-/*************************** DEFINE INDIVIDUAL BOT COMMANDS ***************************************/
+/******************************* BOT COMMANDS *****************************************/
 bot.command("start", async (ctx) => {
-  // if there is already an order in session.settings, make everything blank
+  // if session.settings does not exist, then define it
   if (!ctx.session.settings) {
     ctx.session = { trade: {}, settings: { binance: {}, coinbase: {}, okx: {}, bybit: {} }, wallet: { address: {}, privateKey: {} } };
   }
@@ -224,41 +232,61 @@ bot.command("start", async (ctx) => {
 });
 
 bot.command("balance", async (ctx) => {
-  let balanceString = await getBalances();
-  let keyboard = await getBalanceKeyboard();
-  ctx.telegram.sendMessage(ctx.chat.id, balanceString, {
-    parse_mode: "HTML",
-    reply_markup: {
-      inline_keyboard: keyboard,
-    },
-  });
-});
-
-bot.command("myid", async (ctx) => {
-  console.log("tiggered");
-  const id = ctx.update.message.from.id.toString();
-  console.log("id", id);
-  ctx.reply(id);
-});
-
-bot.action("balance", async (ctx) => {
   let balanceString = await getBalanceString();
+  // let keyboard = await getBalanceKeyboard();
   ctx.telegram.sendMessage(ctx.chat.id, balanceString, {
     parse_mode: "HTML",
-    reply_markup: {
-      inline_keyboard: [[{ text: "Google Sheets", url: "https://docs.google.com/spreadsheets/d/1XY-sjWPj03bw5mIbJrupfJJ9tMBGIiHkCIrT9DVMI9U/edit#gid=0" }]],
-    },
   });
 });
 
+bot.command("settings", async (ctx) => {
+  if (!ctx.session.settings) {
+    ctx.session.settings = {};
+  }
+  ctx.reply("Select an option", { reply_markup: { inline_keyboard: staticKbs.full.settings } });
+});
+
+// define the help command (this way of defining a command is different than the above)
+bot.help((ctx) => {
+  ctx.reply(staticStrings.help, { parse_mode: "HTML" });
+});
+
+// commands are "/command" messages to trigger an action. When you press "Menu" button, all commands will show.
+const commands = [
+  {
+    command: "start",
+    description: "main menu",
+  },
+  {
+    command: "balance",
+    description: "your balance",
+  },
+  {
+    command: "settings",
+    description: "view settings and keys",
+  },
+  {
+    command: "help",
+    description: "documentation",
+  },
+];
+bot.telegram.setMyCommands(commands);
+/************************************** BOT COMMANDS (END) ************************************/
+
+/*************************************** KEYBOARD BUTTONS ***********************************/
+// Here is the logic whenever ANY keyboard button is pressed
+// ctx.callbackQuery.data = query = the text in the "callback_data" associated any keyboard button
 bot.on("callback_query", async (ctx) => {
   const query = ctx.callbackQuery.data;
 
   if (["Binance_spot", "Binance_futures", "Coinbase_spot", "Coinbase_futures", "OKX_spot", "OKX_futures", "ByBit_spot", "ByBit_futures"].includes(query)) {
+    // extract variables
     const exchange = query.split("_")[0];
     const market = query.split("_")[1];
+    // store variables into session storage
     ctx.session.trade = { exchange: exchange };
     ctx.session.trade.market = market;
+    // reply with message and keyboard
     ctx.telegram.sendMessage(ctx.chat.id, `My order (incomplete)\n${ctx.session.trade.exchange} ${ctx.session.trade.market}\n\nNow, select an order type:`, {
       reply_markup: {
         inline_keyboard: staticKbs.full.CEXOrderType,
@@ -267,7 +295,9 @@ bot.on("callback_query", async (ctx) => {
   }
 
   if (["matcha", "jupiter"].includes(query)) {
+    // store variables into session storage
     ctx.session.trade = { exchange: query };
+    // reply with message and keyboard
     const DEXOrderTypeKb = await getDEXOrderTypeKb();
     ctx.telegram.sendMessage(ctx.chat.id, `My order (incomplete)\n${ctx.session.trade.exchange}`, {
       reply_markup: {
@@ -276,6 +306,7 @@ bot.on("callback_query", async (ctx) => {
     });
   }
 
+  // enter the "CEXmarket" Wizard Scene
   if (["market_buy", "market_sell", "limit_buy", "limit_sell"].includes(query)) {
     const orderType = query.split("_")[0];
     ctx.scene.enter(`CEX${orderType}`);
@@ -309,6 +340,14 @@ bot.on("callback_query", async (ctx) => {
     );
   }
 
+  if (query === "balance") {
+    let balanceString = await getBalanceString();
+    // let keyboard = await getBalanceKeyboard();
+    ctx.telegram.sendMessage(ctx.chat.id, balanceString, {
+      parse_mode: "HTML",
+    });
+  }
+
   if (query == "exit") {
     // copy start
     ctx.session.trade = {};
@@ -325,48 +364,25 @@ bot.on("callback_query", async (ctx) => {
     ctx.reply(staticStrings.help, { parse_mode: "HTML" });
   }
 });
+/****************************************** KEYBOARD BUTTONS (END) ************************************/
 
-bot.on("message", async (ctx) => {
-  const text = ctx.message.text;
+// // storing secrets in local storage
+// bot.on("message", async (ctx) => {
+//   const text = ctx.message.text;
 
-  if (text.split("=")[0] === "BINANCE_API") {
-    ctx.session.settings.binance.api = text.split("=")[1];
-    ctx.reply("Binance API Key set");
-  }
-  if (text.split("=")[0] === "BINANCE_SECRET") {
-    ctx.session.settings.binance.secret = text.split("=")[1];
-    ctx.reply("Binance Secret Key set");
-  }
-  if (text.split("=")[0] === "BINANCE_PASSWORD") {
-    ctx.session.settings.binance.password = text.split("=")[1];
-    ctx.reply("Binance password set");
-  }
-});
-
-bot.help((ctx) => {
-  ctx.reply(staticStrings.help, { parse_mode: "HTML" });
-});
-
-const commands = [
-  {
-    command: "start",
-    description: "main menu",
-  },
-  {
-    command: "balance",
-    description: "your balance",
-  },
-  {
-    command: "settings",
-    description: "view settings and keys",
-  },
-  {
-    command: "help",
-    description: "documentation",
-  },
-];
-bot.telegram.setMyCommands(commands);
-/******************************************** END **********************************************/
+//   if (text.split("=")[0] === "BINANCE_API") {
+//     ctx.session.settings.binance.api = text.split("=")[1];
+//     ctx.reply("Binance API Key set");
+//   }
+//   if (text.split("=")[0] === "BINANCE_SECRET") {
+//     ctx.session.settings.binance.secret = text.split("=")[1];
+//     ctx.reply("Binance Secret Key set");
+//   }
+//   if (text.split("=")[0] === "BINANCE_PASSWORD") {
+//     ctx.session.settings.binance.password = text.split("=")[1];
+//     ctx.reply("Binance password set");
+//   }
+// });
 
 /******************************************** FOR LOCAL DEVELOPMENT  **********************************************/
 // Can't use webhook in local development. If using bot.launch(), Telegram listens to incoming messsages through "polling".

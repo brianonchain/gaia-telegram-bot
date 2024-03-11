@@ -37,7 +37,7 @@ const helpLines = [
   "",
   "2) Click the available buttons and follow the instructions",
   "",
-  "<b><u>Settings</u></b>",
+  "<b><u>Settings (NOT FINISHED)</u></b>",
   "The settings is where you can store API keys, passwords, and wallet information (address and private keys), which are needed for the bot to execute trades. All information is stored in the 'ctx.session' object, which is stored in your device's RAM and not on a cloud storage, so third parties cannot view it. In the Settings, can also modify which button options are shown or hidden. Specifically, you can do the following:",
   "- save your API keys or passwords for each exchange (information is stored in your device's RAM, not on a cloud database",
   "- save your wallet information (wallet address and wallet private keys)",

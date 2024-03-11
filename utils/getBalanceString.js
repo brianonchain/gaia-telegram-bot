@@ -6,17 +6,25 @@ const getBalanceString = async () => {
   const getBinanceBalanceString = async () => {
     const binance = new ccxt.binance({
       enableRateLimit: true,
-      apiKey: process.env.BINANCE_KEY,
-      secret: process.env.BINANCE_SECRET,
+      apiKey: process.env.BINANCE_TESTNET_API_KEY,
+      secret: process.env.BINANCE_TESTNET_SECRET_KEY,
     });
     binance.setSandboxMode(true);
 
-    const binanceBalances = (await binance.fetchBalance()).info.balances.slice(0, 20);
+    const binanceBalances = (await binance.fetchBalance()).info.balances;
+    console.log(binanceBalances);
 
-    let binanceBalanceString = "<b>Binance</b>\n";
+    // create balance string, but limit to 20 or Telegram message limit will be exceeded
+    let binanceBalanceString = "<b>Binance</b>";
+    let count = 0;
     for (const binanceBalance of binanceBalances) {
       if (binanceBalance.free > 0.001) {
-        binanceBalanceString = binanceBalanceString + binanceBalance.asset + ": " + binanceBalance.free + "\n";
+        binanceBalanceString = binanceBalanceString + "\n" + binanceBalance.asset + ": " + binanceBalance.free;
+        count++;
+        if (count > 20) {
+          binanceBalanceString = binanceBalanceString + "\n" + `...${binanceBalances.length - 20} more items`;
+          break;
+        }
       }
     }
 
@@ -25,8 +33,7 @@ const getBalanceString = async () => {
 
   const binanceBalanceString = await getBinanceBalanceString();
 
-  const balance = binanceBalanceString;
-
-  return balance;
+  return binanceBalanceString;
 };
+
 module.exports = getBalanceString;
