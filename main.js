@@ -368,9 +368,12 @@ const commands = [
 bot.telegram.setMyCommands(commands);
 /******************************************** END **********************************************/
 
-// Telegram listens to incoming messsages through "polling" (using bot.launch()) or webhooks. When starting the bot in localhost, use bot.launch().
-// If using Heroku, use webhooks. Heroku will set port to number other than 8080. So, if PORT=8080, then use bot.launch().
+/******************************************** FOR LOCAL DEVELOPMENT  **********************************************/
+// Can't use webhook in local development. If using bot.launch(), Telegram listens to incoming messsages through "polling".
+// When starting the bot in local (node main.js), we can use bot.launch().
+// Heroku will set port to number other than 8080. So, if PORT=8080, then use bot.launch().
 if (process.env.PORT == "8080") {
   console.log("activate bot.launch()");
   bot.launch();
 }
+/******************************************************************************************************************/
