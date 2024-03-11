@@ -1,5 +1,6 @@
 .env
 node_modules/
-ctx.txt
 .vscode/
-test.js
+old/
+notes.txt
+googlekey.json
